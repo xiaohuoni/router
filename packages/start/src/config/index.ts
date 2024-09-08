@@ -279,51 +279,12 @@ export function defineConfig(
           // serverComponents.client(),
         ],
       }),
-      ...(apiEntryExists
-        ? [
-            withPlugins([
-              config('start-vite', {
-                ssr: {
-                  noExternal: ['@tanstack/start', 'tsr:routes-manifest'],
-                },
-              }),
-              TanStackRouterVite({
-                ...tsrConfig,
-                autoCodeSplitting: true,
-                experimental: {
-                  ...tsrConfig.experimental,
-                },
-              }),
-            ])({
-              name: 'api',
-              type: 'http',
-              target: 'server',
-              base: apiBase,
-              handler: apiEntry,
-              routes: tsrFileRouter({ tsrConfig, apiBase }),
-              plugins: () => [
-                ...(opts.vite?.plugins?.() || []),
-                ...(opts.routers?.ssr?.vite?.plugins?.() || []),
-                // serverTransform({
-                //   runtime: '@tanstack/start/server-runtime',
-                // }),
-                // config('start-api', {
-                //   ssr: {
-                //     external: ['@vinxi/react-server-dom/client'],
-                //   },
-                // }),
-              ],
-              // link: {
-              //   client: 'client',
-              // },
-            }),
-          ]
-        : []),
       withStartPlugins(tsrConfig)({
         name: 'ssr',
         type: 'http',
         target: 'server',
         handler: ssrEntry,
+        routes: tsrServerFileRouter({ tsrConfig, apiBase }),
         plugins: () => [
           tsrRoutesManifest({
             tsrConfig,
@@ -352,6 +313,7 @@ export function defineConfig(
         // TODO: RSCS - enable this
         // worker: true,
         handler: importToProjectRelative('@tanstack/start/server-handler'),
+        routes: tsrServerFileRouter({ tsrConfig, apiBase }),
         plugins: () => {
           return [
             ...(opts.vite?.plugins?.() || []),
@@ -617,7 +579,7 @@ function tsrRoutesManifest(opts: {
   }
 }
 
-function tsrFileRouter(opts: {
+function tsrServerFileRouter(opts: {
   tsrConfig: z.infer<typeof configSchema>
   apiBase: string
 }) {

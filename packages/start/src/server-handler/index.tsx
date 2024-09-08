@@ -33,6 +33,8 @@ export async function handleServerRequest(request: Request, event?: H3Event) {
   const serverFnId = search._serverFnId
   const serverFnName = search._serverFnName
 
+  console.info('🚀 request.url', request.url, '\n')
+
   if (serverFnId && serverFnName) {
     // if (!serverFnId || !serverFnName) {
     //   throw new Error('Invalid request')

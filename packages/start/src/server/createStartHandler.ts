@@ -6,6 +6,8 @@ import {
   serverFnPayloadTypeHeader,
   serverFnReturnTypeHeader,
 } from '../constants'
+import { findAPIRoute, toTSRFileBasedRoutes, vinxiRoutes } from '../api'
+import type { APIRouteReturnType, HTTP_API_METHOD } from '../api'
 import type { EventHandler, EventHandlerRequest, H3Event } from 'vinxi/http'
 import type { AnyRouter, Manifest } from '@tanstack/react-router'
 import type { HandlerCallback } from './defaultStreamHandler'
@@ -28,6 +30,50 @@ export function createStartHandler<TRouter extends AnyRouter>({
       const url = new URL(request.url)
       const href = url.href.replace(url.origin, '')
 
+      // api
+      const apiUrl = new URL(request.url, 'http://localhost:3000')
+      const apiRoutes = toTSRFileBasedRoutes(vinxiRoutes)
+      const apiRouteMatch = findAPIRoute(apiUrl, apiRoutes)
+      if (apiRouteMatch) {
+        let action: APIRouteReturnType | undefined = undefined
+
+        try {
+          // We can guarantee that action is defined since we filtered for it earlier
+          action = await apiRouteMatch.payload
+            .$APIRoute!.import()
+            .then((m) => m.Route)
+        } catch (err) {
+          // If we can't import the route file, return a 500
+          console.error('Error importing route file:', err)
+          return new Response('Internal server error', { status: 500 })
+        }
+
+        // If we don't have an action, return a 500
+        if (!action) {
+          return new Response('Internal server error', { status: 500 })
+        }
+
+        const method = request.method as HTTP_API_METHOD
+
+        // Get the handler for the request method based on the Request Method
+        const handler = action.methods[method]
+
+        // If the handler is not defined, return a 405
+        // What this means is that we have a route that matches the request
+        // but we don't have a handler for the request method
+        // i.e we have a route that matches /api/foo/$ but we don't have a POST handler
+        if (!handler) {
+          return new Response('Method not allowed', { status: 405 })
+        }
+
+        const apiResponse = await handler({
+          request,
+          params: apiRouteMatch.params,
+        })
+        return apiResponse
+      }
+
+      // render
       // Create a history for the router
       const history = createMemoryHistory({
         initialEntries: [href],

@@ -48,7 +48,7 @@ type CreateAPIRoute = <TPath extends string>(
   path: TPath,
 ) => CreateAPIRouteFn<TPath>
 
-type APIRouteReturnType = ReturnType<ReturnType<CreateAPIRoute>>
+export type APIRouteReturnType = ReturnType<ReturnType<CreateAPIRoute>>
 
 /**
  * This function is used to create an API route that will be listening on a specific path when you are not using the file-based routes.
@@ -82,7 +82,7 @@ export const createAPIFileRoute: CreateAPIRoute = (filePath) => (methods) => ({
  * @param entryRoutes List of routes entries in the TSR format to find the current match by the URL
  * @returns Returns the route that matches the URL or undefined if no route matches
  */
-function findRoute<TPayload = unknown>(
+export function findAPIRoute<TPayload = unknown>(
   url: URL,
   entryRoutes: Array<{ routePath: string; payload: TPayload }>,
 ):
@@ -186,7 +186,7 @@ export const defaultAPIRoutesHandler: (opts: {
     }))
 
     // Find the route that matches the request by the request URL
-    const match = findRoute(url, routes)
+    const match = findAPIRoute(url, routes)
 
     // If we don't have a route that could possibly handle the request, return a 404
     if (!match) {
@@ -215,7 +215,7 @@ export const defaultAPIRoutesHandler: (opts: {
   }
 }
 
-interface CustomizedVinxiFileRoute {
+export interface CustomizedVinxiFileRoute {
   path: string // this path adheres to the h3 router path format
   filePath: string // this is the file path on the system
   $APIRoute?: {
@@ -229,7 +229,7 @@ interface CustomizedVinxiFileRoute {
 /**
  * This is populated by the work done in the config file using the tsrFileRouter
  */
-const vinxiRoutes = (
+export const vinxiRoutes = (
   vinxiFileRoutes as unknown as Array<CustomizedVinxiFileRoute>
 ).filter((route) => route['$APIRoute'])
 
@@ -262,7 +262,7 @@ const vinxiRoutes = (
  * ]
  * ```
  */
-function toTSRFileBasedRoutes(
+export function toTSRFileBasedRoutes(
   routes: Array<CustomizedVinxiFileRoute>,
 ): Array<{ routePath: string; payload: CustomizedVinxiFileRoute }> {
   const pairs: Array<{
@@ -327,7 +327,7 @@ export const defaultAPIFileRouteHandler: StartAPIHandlerCallback = async ({
   const url = new URL(request.url, 'http://localhost:3000')
 
   // Find the route that file that matches the request by the request URL
-  const match = findRoute(url, routes)
+  const match = findAPIRoute(url, routes)
 
   // If we don't have a route that could possibly handle the request, return a 404
   if (!match) {
