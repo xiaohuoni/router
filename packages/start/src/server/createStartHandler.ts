@@ -37,6 +37,13 @@ export function createStartHandler<TRouter extends AnyRouter>({
       if (apiRouteMatch) {
         let action: APIRouteReturnType | undefined = undefined
 
+        /**
+         * TODO: Figure out what happens next over here.
+         * We'd likely be doing proxying over to server functions in here.
+         * Its not the cleanest thing, plus we'd need to write an internal
+         * SSR handler for possible TanStack Start SPA mode with API routes.
+         */
+
         try {
           // We can guarantee that action is defined since we filtered for it earlier
           action = await apiRouteMatch.payload
