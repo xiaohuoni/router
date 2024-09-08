@@ -42,6 +42,14 @@ export function createStartHandler<TRouter extends AnyRouter>({
          * We'd likely be doing proxying over to server functions in here.
          * Its not the cleanest thing, plus we'd need to write an internal
          * SSR handler for possible TanStack Start SPA mode with API routes.
+         *
+         * So, from below, we'd just be proxying to the server function,
+         * without any matching logic and letting the server function handle
+         * the request and the necessary matching logic.
+         *
+         * @example
+         * const response = await proxiedServerFn(...args)
+         * if (response !== undefined) return response
          */
 
         try {

@@ -27,13 +27,17 @@ export async function handleServerRequest(request: Request, event?: H3Event) {
   ) as {
     _serverFnId?: string
     _serverFnName?: string
+    _serverFnAPIPath?: string
     payload?: any
   }
 
   const serverFnId = search._serverFnId
   const serverFnName = search._serverFnName
+  const serverFnAPIPath = search._serverFnAPIPath
 
-  console.info('🚀 request.url', request.url, '\n')
+  if (serverFnAPIPath === 'my-special-condition') {
+    // resolve the request here with the path matching logic in api routes
+  }
 
   if (serverFnId && serverFnName) {
     // if (!serverFnId || !serverFnName) {
