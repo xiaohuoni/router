@@ -352,30 +352,36 @@ export function defineConfig(
         // TODO: RSCS - enable this
         // worker: true,
         handler: importToProjectRelative('@tanstack/start/server-handler'),
-        plugins: () => [
-          serverFunctions.server({
-            runtime: '@tanstack/start/react-server-runtime',
-            // TODO: RSCS - remove this
-            resolve: {
-              conditions: [],
-            },
-          }),
-          // TODO: RSCs - add this
-          // serverComponents.serverActions({
-          //   resolve: {
-          //     conditions: [
-          //       'react-server',
-          //       // 'node',
-          //       'import',
-          //       process.env.NODE_ENV,
-          //     ],
-          //   },
-          //   runtime: '@vinxi/react-server-dom/runtime',
-          //   transpileDeps: ['react', 'react-dom', '@vinxi/react-server-dom'],
-          // }),
-          ...(opts.vite?.plugins?.() || []),
-          ...(opts.routers?.server?.vite?.plugins?.() || []),
-        ],
+        plugins: () => {
+          return [
+            ...(opts.vite?.plugins?.() || []),
+            ...(opts.routers?.server?.vite?.plugins?.() || []),
+            serverFunctions.server({
+              runtime: '@tanstack/start/react-server-runtime',
+              // TODO: RSCS - remove this
+              resolve: {
+                conditions: [],
+              },
+            }),
+            // TODO: RSCs - add this
+            // serverComponents.serverActions({
+            //   resolve: {
+            //     conditions: [
+            //       'react-server',
+            //       // 'node',
+            //       'import',
+            //       process.env.NODE_ENV,
+            //     ],
+            //   },
+            //   runtime: '@vinxi/react-server-dom/runtime',
+            //   transpileDeps: ['react', 'react-dom', '@vinxi/react-server-dom'],
+            // }),
+            config('app-server', {
+              resolve: {},
+              define: {},
+            }),
+          ]
+        },
       }),
     ],
   })

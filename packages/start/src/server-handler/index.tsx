@@ -4,7 +4,7 @@ import {
   isNotFound,
   isRedirect,
 } from '@tanstack/react-router'
-import invariant from 'tiny-invariant'
+// import invariant from 'tiny-invariant'
 import { eventHandler, toWebRequest } from 'vinxi/http'
 import { getManifest } from 'vinxi/manifest'
 import {
@@ -33,144 +33,149 @@ export async function handleServerRequest(request: Request, event?: H3Event) {
   const serverFnId = search._serverFnId
   const serverFnName = search._serverFnName
 
-  if (!serverFnId || !serverFnName) {
-    throw new Error('Invalid request')
-  }
+  if (serverFnId && serverFnName) {
+    // if (!serverFnId || !serverFnName) {
+    //   throw new Error('Invalid request')
+    // }
 
-  invariant(typeof serverFnId === 'string', 'Invalid server action')
+    // invariant(typeof serverFnId === 'string', 'Invalid server action')
 
-  if (process.env.NODE_ENV === 'development')
-    console.info(`ServerFn Request: ${serverFnId} - ${serverFnName}`)
-  if (process.env.NODE_ENV === 'development') console.info()
+    if (process.env.NODE_ENV === 'development') {
+      console.info(`ServerFn Request: ${serverFnId} - ${serverFnName}`)
+      console.info()
+    }
 
-  const action = (await getManifest('server').chunks[serverFnId]?.import())?.[
-    serverFnName
-  ] as Function
+    const action = (await getManifest('server').chunks[serverFnId]?.import())?.[
+      serverFnName
+    ] as Function
 
-  const response = await (async () => {
-    try {
-      const args = await (async () => {
-        if (request.headers.get(serverFnPayloadTypeHeader) === 'payload') {
-          return [
-            method.toLowerCase() === 'get'
-              ? (() => {
-                  return (defaultParseSearch(url.search) as any)?.payload
-                })()
-              : await request.json(),
-            { method, request },
-          ] as const
+    const response = await (async () => {
+      try {
+        const args = await (async () => {
+          if (request.headers.get(serverFnPayloadTypeHeader) === 'payload') {
+            return [
+              method.toLowerCase() === 'get'
+                ? (() => {
+                    return (defaultParseSearch(url.search) as any)?.payload
+                  })()
+                : await request.json(),
+              { method, request },
+            ] as const
+          }
+
+          if (
+            request.headers.get(serverFnPayloadTypeHeader) === 'formData' ||
+            request.headers.get('Content-Type')?.includes('multipart/form-data')
+          ) {
+            return [
+              method.toLowerCase() === 'get'
+                ? (() => {
+                    const { _serverFnId, _serverFnName, payload } = search
+                    return payload
+                  })()
+                : await request.formData(),
+              { method, request },
+            ] as const
+          }
+
+          if (request.headers.get(serverFnPayloadTypeHeader) === 'request') {
+            return [request, { method, request }] as const
+          }
+
+          // payload type === 'args'
+          return (await request.json()) as Array<any>
+        })()
+
+        const result = await action(...args)
+
+        if (result instanceof Response) {
+          return result
         }
 
-        if (
-          request.headers.get(serverFnPayloadTypeHeader) === 'formData' ||
-          request.headers.get('Content-Type')?.includes('multipart/form-data')
-        ) {
-          return [
-            method.toLowerCase() === 'get'
-              ? (() => {
-                  const { _serverFnId, _serverFnName, payload } = search
-                  return payload
-                })()
-              : await request.formData(),
-            { method, request },
-          ] as const
+        // TODO: RSCs
+        // if (isValidElement(result)) {
+        //   const { renderToPipeableStream } = await import(
+        //     // @ts-expect-error
+        //     '@vinxi/react-server-dom/server'
+        //   )
+
+        //   const pipeableStream = renderToPipeableStream(result)
+
+        //   setHeaders(event, {
+        //     'Content-Type': 'text/x-component',
+        //     [serverFnReturnTypeHeader]: 'rsc',
+        //   } as any)
+
+        //   sendStream(event, response)
+        //   event._handled = true
+
+        //   return new Response(null, { status: 200 })
+        // }
+
+        if (isRedirect(result) || isNotFound(result)) {
+          return redirectOrNotFoundResponse(result)
         }
 
-        if (request.headers.get(serverFnPayloadTypeHeader) === 'request') {
-          return [request, { method, request }] as const
+        return new Response(
+          result !== undefined ? JSON.stringify(result) : undefined,
+          {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              [serverFnReturnTypeHeader]: 'json',
+            },
+          },
+        )
+      } catch (error: any) {
+        if (error instanceof Response) {
+          return error
         }
 
-        // payload type === 'args'
-        return (await request.json()) as Array<any>
-      })()
+        // Currently this server-side context has no idea how to
+        // build final URLs, so we need to defer that to the client.
+        // The client will check for __redirect and __notFound keys,
+        // and if they exist, it will handle them appropriately.
 
-      const result = await action(...args)
+        if (isRedirect(error) || isNotFound(error)) {
+          return redirectOrNotFoundResponse(error)
+        }
 
-      if (result instanceof Response) {
-        return result
-      }
+        console.error('Server Fn Error!')
+        console.error(error)
+        console.info()
 
-      // TODO: RSCs
-      // if (isValidElement(result)) {
-      //   const { renderToPipeableStream } = await import(
-      //     // @ts-expect-error
-      //     '@vinxi/react-server-dom/server'
-      //   )
-
-      //   const pipeableStream = renderToPipeableStream(result)
-
-      //   setHeaders(event, {
-      //     'Content-Type': 'text/x-component',
-      //     [serverFnReturnTypeHeader]: 'rsc',
-      //   } as any)
-
-      //   sendStream(event, response)
-      //   event._handled = true
-
-      //   return new Response(null, { status: 200 })
-      // }
-
-      if (isRedirect(result) || isNotFound(result)) {
-        return redirectOrNotFoundResponse(result)
-      }
-
-      return new Response(
-        result !== undefined ? JSON.stringify(result) : undefined,
-        {
-          status: 200,
+        return new Response(JSON.stringify(error), {
+          status: 500,
           headers: {
             'Content-Type': 'application/json',
-            [serverFnReturnTypeHeader]: 'json',
+            [serverFnReturnTypeHeader]: 'error',
           },
-        },
-      )
-    } catch (error: any) {
-      if (error instanceof Response) {
-        return error
+        })
       }
-
-      // Currently this server-side context has no idea how to
-      // build final URLs, so we need to defer that to the client.
-      // The client will check for __redirect and __notFound keys,
-      // and if they exist, it will handle them appropriately.
-
-      if (isRedirect(error) || isNotFound(error)) {
-        return redirectOrNotFoundResponse(error)
-      }
-
-      console.error('Server Fn Error!')
-      console.error(error)
-      console.info()
-
-      return new Response(JSON.stringify(error), {
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          [serverFnReturnTypeHeader]: 'error',
-        },
-      })
-    }
-  })()
-
-  if (process.env.NODE_ENV === 'development')
-    console.info(`ServerFn Response: ${response.status}`)
-
-  if (
-    response.status === 200 &&
-    response.headers.get('Content-Type') === 'application/json'
-  ) {
-    const cloned = response.clone()
-    const text = await cloned.text()
-    const payload = text ? JSON.stringify(JSON.parse(text)) : 'undefined'
+    })()
 
     if (process.env.NODE_ENV === 'development')
-      console.info(
-        ` - Payload: ${payload.length > 100 ? payload.substring(0, 100) + '...' : payload}`,
-      )
-  }
-  if (process.env.NODE_ENV === 'development') console.info()
+      console.info(`ServerFn Response: ${response.status}`)
 
-  return response
+    if (
+      response.status === 200 &&
+      response.headers.get('Content-Type') === 'application/json'
+    ) {
+      const cloned = response.clone()
+      const text = await cloned.text()
+      const payload = text ? JSON.stringify(JSON.parse(text)) : 'undefined'
+
+      if (process.env.NODE_ENV === 'development')
+        console.info(
+          ` - Payload: ${payload.length > 100 ? payload.substring(0, 100) + '...' : payload}`,
+        )
+    }
+    if (process.env.NODE_ENV === 'development') console.info()
+
+    return response
+  }
+
+  throw new Error('Invalid request')
 }
 
 function redirectOrNotFoundResponse(error: any) {
