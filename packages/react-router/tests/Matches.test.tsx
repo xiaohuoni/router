@@ -29,7 +29,7 @@ const invoicesRoute = createRoute({
 })
 
 const InvoicesIndex = () => {
-  const matches = useMatches<unknown, DefaultRouter>()
+  const matches = useMatches<DefaultRouter>()
 
   const loaderDataMatches = matches.filter((match) =>
     isMatch(match, 'loaderData.0.id'),

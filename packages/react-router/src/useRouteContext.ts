@@ -17,7 +17,6 @@ export type UseRouteContextOptions<
 } & StructuralSharingOption<TRouter, TSelected>
 
 export function useRouteContext<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteTree extends AnyRoute = TRouter['routeTree'],
   TFrom extends string | undefined = undefined,
@@ -25,6 +24,7 @@ export function useRouteContext<
   TRouteContext = TStrict extends false
     ? AllContext<TRouteTree>
     : Expand<RouteById<TRouteTree, TFrom>['types']['allContext']>,
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? TRouteContext : TSelected,
 >(
   opts: UseRouteContextOptions<

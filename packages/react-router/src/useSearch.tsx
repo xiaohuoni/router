@@ -16,14 +16,14 @@ export type UseSearchOptions<
 } & StructuralSharingOption<TRouter, TSelected>
 
 export function useSearch<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
-  TRouteTree extends AnyRoute = RegisteredRouter['routeTree'],
+  TRouteTree extends AnyRoute = TRouter['routeTree'],
   TFrom extends string | undefined = undefined,
   TStrict extends boolean = true,
   TSearch = TStrict extends false
     ? FullSearchSchema<TRouteTree>
     : Expand<RouteById<TRouteTree, TFrom>['types']['fullSearchSchema']>,
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? TSearch : TSelected,
 >(
   opts: UseSearchOptions<

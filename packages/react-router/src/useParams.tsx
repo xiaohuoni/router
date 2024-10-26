@@ -16,7 +16,6 @@ export type UseParamsOptions<
 } & StructuralSharingOption<TRouter, TSelected>
 
 export function useParams<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteTree extends AnyRoute = TRouter['routeTree'],
   TFrom extends string | undefined = undefined,
@@ -24,6 +23,7 @@ export function useParams<
   TParams = TStrict extends false
     ? AllParams<TRouteTree>
     : RouteById<TRouteTree, TFrom>['types']['allParams'],
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? TParams : TSelected,
 >(
   opts: UseParamsOptions<

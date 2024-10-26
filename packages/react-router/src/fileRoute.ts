@@ -208,12 +208,9 @@ export class LazyRoute<TRoute extends AnyRoute> {
   }
 
   useMatch = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
-    TRouteMatch = MakeRouteMatch<
-      RegisteredRouter['routeTree'],
-      TRoute['types']['id']
-    >,
+    TRouteMatch = MakeRouteMatch<TRouter['routeTree'], TRoute['types']['id']>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TRouteMatch : TSelected,
   >(
     opts?: {
@@ -228,9 +225,9 @@ export class LazyRoute<TRoute extends AnyRoute> {
   }
 
   useRouteContext = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TRouteContext = TRoute['types']['allContext'],
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TRouteContext : TSelected,
   >(
     opts?: {
@@ -245,9 +242,9 @@ export class LazyRoute<TRoute extends AnyRoute> {
   }
 
   useSearch = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TSearch = TRoute['types']['fullSearchSchema'],
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TSearch : TSelected,
   >(
     opts?: {
@@ -262,9 +259,9 @@ export class LazyRoute<TRoute extends AnyRoute> {
   }
 
   useParams = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TAllParams = TRoute['types']['allParams'],
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TAllParams : TSelected,
   >(
     opts?: {
@@ -279,22 +276,23 @@ export class LazyRoute<TRoute extends AnyRoute> {
   }
 
   useLoaderDeps = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TLoaderDeps = TRoute['types']['loaderDeps'],
+    TSelected = unknown,
+    TReturn = unknown extends TSelected ? TLoaderDeps : TSelected,
   >(
     opts?: {
       select?: (s: TLoaderDeps) => TSelected
       structuralSharing?: boolean
     } & StructuralSharingOption<TRouter, TSelected>,
-  ): TSelected => {
+  ): TReturn => {
     return useLoaderDeps({ ...opts, from: this.options.id } as any)
   }
 
   useLoaderData = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TLoaderData = TRoute['types']['loaderData'],
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TLoaderData : TSelected,
   >(
     opts?: {

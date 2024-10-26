@@ -11,8 +11,8 @@ export type UseRouterStateOptions<TRouter extends AnyRouter, TSelected> = {
 } & StructuralSharingOption<TRouter, TSelected>
 
 export function useRouterState<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
+  TSelected = unknown,
   TReturn = unknown extends TSelected
     ? RouterState<TRouter['routeTree']>
     : TSelected,

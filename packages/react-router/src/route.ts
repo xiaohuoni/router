@@ -829,9 +829,9 @@ export class RouteApi<TId, TRouter extends AnyRouter = RegisteredRouter> {
   }
 
   useMatch = <
-    TSelected,
     TRouteTree extends AnyRoute = TRouter['routeTree'],
     TRouteMatch = MakeRouteMatch<TRouteTree, TId>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TRouteMatch : TSelected,
   >(
     opts?: {
@@ -846,8 +846,8 @@ export class RouteApi<TId, TRouter extends AnyRouter = RegisteredRouter> {
   }
 
   useRouteContext = <
-    TSelected,
     TRouteContext = Expand<RouteTypesById<TRouter, TId>['allContext']>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TRouteContext : TSelected,
   >(
     opts?: {
@@ -864,8 +864,8 @@ export class RouteApi<TId, TRouter extends AnyRouter = RegisteredRouter> {
   }
 
   useSearch = <
-    TSelected,
     TSearch = Expand<RouteTypesById<TRouter, TId>['fullSearchSchema']>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TSearch : TSelected,
   >(
     opts?: {
@@ -882,8 +882,8 @@ export class RouteApi<TId, TRouter extends AnyRouter = RegisteredRouter> {
   }
 
   useParams = <
-    TSelected,
     TParams = Expand<RouteTypesById<TRouter, TId>['allParams']>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TParams : TSelected,
   >(
     opts?: {
@@ -900,8 +900,8 @@ export class RouteApi<TId, TRouter extends AnyRouter = RegisteredRouter> {
   }
 
   useLoaderDeps = <
-    TSelected,
     TLoaderDeps = RouteTypesById<TRouter, TId>['loaderDeps'],
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TLoaderDeps : TSelected,
   >(
     opts?: {
@@ -912,8 +912,8 @@ export class RouteApi<TId, TRouter extends AnyRouter = RegisteredRouter> {
   }
 
   useLoaderData = <
-    TSelected,
     TLoaderData = RouteTypesById<TRouter, TId>['loaderData'],
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TLoaderData : TSelected,
   >(
     opts?: {
@@ -1276,10 +1276,10 @@ export class Route<
   }
 
   useMatch = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TRouteTree extends AnyRoute = TRouter['routeTree'],
     TRouteMatch = MakeRouteMatch<TRouteTree, TId>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TRouteMatch : TSelected,
   >(
     opts?: {
@@ -1294,7 +1294,6 @@ export class Route<
   }
 
   useRouteContext = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TRouteContext = Expand<
       ResolveAllContext<
@@ -1304,6 +1303,7 @@ export class Route<
         TBeforeLoadFn
       >
     >,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TRouteContext : TSelected,
   >(
     opts?: {
@@ -1318,9 +1318,9 @@ export class Route<
   }
 
   useSearch = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TSearch = Expand<ResolveFullSearchSchema<TParentRoute, TSearchValidator>>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TSearch : TSelected,
   >(
     opts?: {
@@ -1335,9 +1335,9 @@ export class Route<
   }
 
   useParams = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TAllParams = Expand<ResolveAllParamsFromParent<TParentRoute, TParams>>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TAllParams : TSelected,
   >(
     opts?: {
@@ -1352,8 +1352,8 @@ export class Route<
   }
 
   useLoaderDeps = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TLoaderDeps : TSelected,
   >(
     opts?: {
@@ -1364,9 +1364,9 @@ export class Route<
   }
 
   useLoaderData = <
-    TSelected,
     TRouter extends AnyRouter = RegisteredRouter,
     TLoaderData = ResolveLoaderData<TLoaderFn>,
+    TSelected = unknown,
     TReturn = unknown extends TSelected ? TLoaderData : TSelected,
   >(
     opts?: {

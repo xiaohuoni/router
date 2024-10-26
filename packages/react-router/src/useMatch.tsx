@@ -19,15 +19,15 @@ export type UseMatchOptions<
 > = StrictOrFrom<TFrom, TStrict> & {
   select?: (match: MakeRouteMatch<TRouteTree, TFrom, TStrict>) => TSelected
   shouldThrow?: TThrow
-} & StructuralSharingOption<TRouter, NoInfer<TSelected>>
+} & StructuralSharingOption<TRouter, TSelected>
 
 export function useMatch<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
-  TRouteTree extends AnyRoute = RegisteredRouter['routeTree'],
+  TRouteTree extends AnyRoute = TRouter['routeTree'],
   TFrom extends string | undefined = undefined,
   TStrict extends boolean = true,
   TThrow extends boolean = true,
+  TSelected = unknown,
   TReturn = unknown extends TSelected
     ? MakeRouteMatch<TRouteTree, TFrom, TStrict>
     : TSelected,

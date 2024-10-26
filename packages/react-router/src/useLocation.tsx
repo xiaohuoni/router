@@ -3,9 +3,9 @@ import type { StructuralSharingOption } from './structuralSharing'
 import type { AnyRouter, RegisteredRouter, RouterState } from './router'
 
 export function useLocation<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TLocationState = RouterState<TRouter['routeTree']>['location'],
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? TLocationState : TSelected,
 >(
   opts?: {

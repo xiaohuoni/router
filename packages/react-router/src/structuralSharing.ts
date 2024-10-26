@@ -47,7 +47,11 @@ export type IsJsonable<T, TLooseMode = true> =
     : // Otherwise non-jsonable type union was found not empty
       Loose<T, TLooseMode>
 
-export type StructuralSharingOption<TRouter extends AnyRouter, TSelected> =
+export type StructuralSharingOption<
+  TRouter extends AnyRouter,
+  TSelected,
+  TLooseMode = false,
+> =
   TSelected extends IsJsonable<TSelected>
     ? { structuralSharing?: boolean }
     : DefaultStructuralSharingOptionByRouter<TRouter> extends true

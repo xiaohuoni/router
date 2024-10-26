@@ -18,7 +18,6 @@ export type UseLoaderDataOptions<
 } & StructuralSharingOption<TRouter, TSelected>
 
 export function useLoaderData<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteTree extends AnyRoute = TRouter['routeTree'],
   TFrom extends string | undefined = undefined,
@@ -28,6 +27,7 @@ export function useLoaderData<
     TFrom,
     TStrict
   > = MakeRouteMatch<TRouteTree, TFrom, TStrict>,
+  TSelected = unknown,
   TReturn = unknown extends TSelected
     ? Required<TRouteMatch>['loaderData']
     : TSelected,

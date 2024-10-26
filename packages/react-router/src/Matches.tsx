@@ -9,7 +9,7 @@ import { Match } from './Match'
 import { SafeFragment } from './SafeFragment'
 import type { StructuralSharingOption } from './structuralSharing'
 import type { AnyRoute, ReactNode, StaticDataRouteOption } from './route'
-import type { AnyRouter, RegisteredRouter } from './router'
+import type { AnyRouter, RegisteredRouter, RouterState } from './router'
 import type { ResolveRelativePath, ToOptions } from './link'
 import type {
   AllContext,
@@ -362,9 +362,9 @@ export type MakeRouteMatchUnion<
   : never
 
 export function useMatches<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteMatch = MakeRouteMatchUnion<TRouter>,
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? Array<TRouteMatch> : TSelected,
 >(
   opts?: {
@@ -372,18 +372,18 @@ export function useMatches<
   } & StructuralSharingOption<TRouter, TSelected>,
 ): TReturn {
   return useRouterState({
-    select: (state) => {
+    select: (state: RouterState<TRouter['routeTree']>) => {
       const matches = state.matches
       return opts?.select ? opts.select(matches as Array<TRouteMatch>) : matches
     },
     structuralSharing: opts?.structuralSharing,
-  })
+  } as any)
 }
 
 export function useParentMatches<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteMatch = MakeRouteMatchUnion<TRouter>,
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? Array<TRouteMatch> : TSelected,
 >(
   opts?: {
@@ -393,7 +393,7 @@ export function useParentMatches<
   const contextMatchId = React.useContext(matchContext)
 
   return useMatches({
-    select: (matches) => {
+    select: (matches: Array<MakeRouteMatchUnion<TRouter>>) => {
       matches = matches.slice(
         0,
         matches.findIndex((d) => d.id === contextMatchId),
@@ -401,13 +401,13 @@ export function useParentMatches<
       return opts?.select ? opts.select(matches as Array<TRouteMatch>) : matches
     },
     structuralSharing: opts?.structuralSharing,
-  })
+  } as any)
 }
 
 export function useChildMatches<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteMatch = MakeRouteMatchUnion<TRouter>,
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? Array<TRouteMatch> : TSelected,
 >(
   opts?: {
@@ -417,12 +417,12 @@ export function useChildMatches<
   const contextMatchId = React.useContext(matchContext)
 
   return useMatches({
-    select: (matches) => {
+    select: (matches: Array<MakeRouteMatchUnion<TRouter>>) => {
       matches = matches.slice(
         matches.findIndex((d) => d.id === contextMatchId) + 1,
       )
       return opts?.select ? opts.select(matches as Array<TRouteMatch>) : matches
     },
     structuralSharing: opts?.structuralSharing,
-  })
+  } as any)
 }

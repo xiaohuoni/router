@@ -7,7 +7,6 @@ import type { RouteIds } from './routeInfo'
 import type { Constrain, StrictOrFrom } from './utils'
 
 export function useLoaderDeps<
-  TSelected,
   TRouter extends AnyRouter = RegisteredRouter,
   TRouteTree extends AnyRoute = TRouter['routeTree'],
   TFrom extends string | undefined = undefined,
@@ -15,6 +14,7 @@ export function useLoaderDeps<
     TRouteTree,
     TFrom
   >,
+  TSelected = unknown,
   TReturn = unknown extends TSelected ? TRouteMatch : TSelected,
 >(
   opts: StrictOrFrom<Constrain<TFrom, RouteIds<TRouteTree>>> & {
