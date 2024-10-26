@@ -31,33 +31,39 @@ test('when there are no params', () => {
 
   type DefaultRouter = typeof defaultRouter
 
-  expectTypeOf(useParams<DefaultRouter['routeTree']>)
+  expectTypeOf(useParams<unknown, DefaultRouter, DefaultRouter['routeTree']>)
     .parameter(0)
     .toHaveProperty('from')
     .toEqualTypeOf<'/invoices' | '__root__' | '/invoices/' | '/'>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree']>)
+  expectTypeOf(useParams<unknown, DefaultRouter, DefaultRouter['routeTree']>)
     .parameter(0)
     .toHaveProperty('strict')
     .toEqualTypeOf<true | undefined>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree'], '/'>)
+  expectTypeOf(
+    useParams<unknown, DefaultRouter, DefaultRouter['routeTree'], '/'>,
+  )
     .parameter(0)
     .toHaveProperty('select')
     .parameter(0)
     .toEqualTypeOf<{}>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree'], '/'>)
+  expectTypeOf(
+    useParams<unknown, DefaultRouter, DefaultRouter['routeTree'], '/'>,
+  )
     .parameter(0)
     .toHaveProperty('select')
     .returns.toEqualTypeOf<{}>()
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/'>,
+    useParams<unknown, DefaultRouter, DefaultRouter['routeTree'], '/'>,
   ).returns.toEqualTypeOf<{}>()
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/', false>({ strict: false }),
+    useParams<unknown, DefaultRouter, DefaultRouter['routeTree'], '/', false>({
+      strict: false,
+    }),
   ).toEqualTypeOf<{}>()
 })
 
@@ -96,14 +102,26 @@ test('when there is one param', () => {
   type DefaultRouter = typeof defaultRouter
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/'>,
+    useParams<unknown, DefaultRouter, DefaultRouter['routeTree'], '/'>,
   ).returns.toEqualTypeOf<{}>()
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/invoices/$invoiceId'>,
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices/$invoiceId'
+    >,
   ).returns.toEqualTypeOf<{ invoiceId: string }>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree'], '/invoices/$invoiceId'>)
+  expectTypeOf(
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices/$invoiceId'
+    >,
+  )
     .parameter(0)
     .toHaveProperty('select')
     .toEqualTypeOf<
@@ -111,10 +129,24 @@ test('when there is one param', () => {
     >()
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/invoices', false>,
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices',
+      false
+    >,
   ).returns.toEqualTypeOf<{ invoiceId?: string }>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree'], '/invoices', false>)
+  expectTypeOf(
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices',
+      false
+    >,
+  )
     .parameter(0)
     .toHaveProperty('select')
     .toEqualTypeOf<
@@ -123,6 +155,8 @@ test('when there is one param', () => {
 
   expectTypeOf(
     useParams<
+      unknown,
+      DefaultRouter,
       DefaultRouter['routeTree'],
       '/invoices',
       false,
@@ -181,14 +215,26 @@ test('when there are multiple params', () => {
   type DefaultRouter = typeof defaultRouter
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/'>,
+    useParams<unknown, DefaultRouter, DefaultRouter['routeTree'], '/'>,
   ).returns.toEqualTypeOf<{}>()
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/invoices/$invoiceId'>,
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices/$invoiceId'
+    >,
   ).returns.toEqualTypeOf<{ invoiceId: string }>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree'], '/invoices/$invoiceId'>)
+  expectTypeOf(
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices/$invoiceId'
+    >,
+  )
     .parameter(0)
     .toHaveProperty('select')
     .toEqualTypeOf<
@@ -196,10 +242,24 @@ test('when there are multiple params', () => {
     >()
 
   expectTypeOf(
-    useParams<DefaultRouter['routeTree'], '/invoices', false>,
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices',
+      false
+    >,
   ).returns.toEqualTypeOf<{ invoiceId?: string; postId?: string }>()
 
-  expectTypeOf(useParams<DefaultRouter['routeTree'], '/invoices', false>)
+  expectTypeOf(
+    useParams<
+      unknown,
+      DefaultRouter,
+      DefaultRouter['routeTree'],
+      '/invoices',
+      false
+    >,
+  )
     .parameter(0)
     .toHaveProperty('select')
     .toEqualTypeOf<
