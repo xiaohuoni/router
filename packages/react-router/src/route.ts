@@ -1324,7 +1324,7 @@ export class Route<
     TReturn = unknown extends TSelected ? TSearch : TSelected,
   >(
     opts?: {
-      select?: (search: TSearch, structuralSharing?: boolean) => TSelected
+      select?: (search: TSearch) => TSelected
     } & StructuralSharingOption<TRouter, TSelected>,
   ): TReturn => {
     return useSearch({
@@ -1341,7 +1341,7 @@ export class Route<
     TReturn = unknown extends TSelected ? TAllParams : TSelected,
   >(
     opts?: {
-      select?: (params: TAllParams, structuralSharing?: boolean) => TSelected
+      select?: (params: TAllParams) => TSelected
     } & StructuralSharingOption<TRouter, TSelected>,
   ): TReturn => {
     return useParams({
