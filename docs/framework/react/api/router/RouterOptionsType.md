@@ -35,14 +35,24 @@ The `RouterOptions` type accepts an object with the following properties and met
 - A function that will be used to parse search params when parsing the current location.
 - Defaults to `defaultParseSearch`.
 
+### `search.strict` property
+
+- Type: `boolean`
+- Optional
+- Defaults to `false`
+- Configures how unknown search params (= not returned by any `validateSearch`) are treated.
+- If `false`, unknown search params will be kept.
+- If `true`, unknown search params will be removed.
+
 ### `defaultPreload` property
 
-- Type: `undefined | false | 'intent' | 'viewport'`
+- Type: `undefined | false | 'intent' | 'viewport' | 'render'`
 - Optional
 - Defaults to `false`
 - If `false`, routes will not be preloaded by default in any way.
 - If `'intent'`, routes will be preloaded by default when the user hovers over a link or a `touchstart` event is detected on a `<Link>`.
 - If `'viewport'`, routes will be preloaded by default when they are within the viewport of the browser.
+- If `'render'`, routes will be preloaded by default as soon as they are rendered in the DOM.
 
 ### `defaultPreloadDelay` property
 

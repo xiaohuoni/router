@@ -32,13 +32,17 @@ export {
   createLazyRoute,
   createLazyFileRoute,
 } from './fileRoute'
-export type { FileRoutesByPath, LazyRouteOptions } from './fileRoute'
+export type {
+  FileRoutesByPath,
+  FileRouteTypes,
+  LazyRouteOptions,
+} from './fileRoute'
 
 export * from './history'
 
 export { lazyRouteComponent } from './lazyRouteComponent'
 
-export { useLinkProps, createLink, Link } from './link'
+export { useLinkProps, createLink, Link, linkOptions } from './link'
 export type {
   CleanPath,
   Split,
@@ -69,6 +73,9 @@ export type {
   ActiveLinkOptions,
   LinkProps,
   LinkComponent,
+  LinkComponentProps,
+  CreateLinkProps,
+  MakeOptionalPathParams,
 } from './link'
 
 export type { ParsedLocation } from './location'
@@ -88,6 +95,8 @@ export type {
   MatchRouteOptions,
   UseMatchRouteOptions,
   MakeMatchRouteOptions,
+  MakeRouteMatch,
+  MakeRouteMatchUnion,
 } from './Matches'
 
 export { matchContext } from './matchContext'
@@ -230,6 +239,9 @@ export type {
   RoutePaths,
   FullSearchSchema,
   AllParams,
+  AllLoaderData,
+  FullSearchSchemaInput,
+  AllContext,
 } from './routeInfo'
 
 export {
@@ -340,3 +352,5 @@ export type { Manifest, RouterManagedTag } from './manifest'
 
 export { createControlledPromise } from './utils'
 export type { ControlledPromise } from './utils'
+
+export { retainSearchParams, stripSearchParams } from './searchMiddleware'

@@ -73,6 +73,10 @@
               "to": "framework/react/guide/file-based-routing"
             },
             {
+              "label": "Virtual File Routes",
+              "to": "framework/react/guide/virtual-file-routes"
+            },
+            {
               "label": "Code Based Routing",
               "to": "framework/react/guide/code-based-routing"
             },
@@ -99,6 +103,14 @@
             {
               "label": "Search Params",
               "to": "framework/react/guide/search-params"
+            },
+            {
+              "label": "Link Options",
+              "to": "framework/react/guide/link-options"
+            },
+            {
+              "label": "Custom Links",
+              "to": "framework/react/guide/custom-link"
             },
             {
               "label": "Data Loading",
@@ -214,6 +226,10 @@
             {
               "label": "Static Prerendering",
               "to": "framework/react/start/static-prerendering"
+            },
+            {
+              "label": "Path Aliases",
+              "to": "framework/react/start/path-aliases"
             }
           ]
         }
@@ -231,6 +247,19 @@
               "to": "framework/react/api/router"
             }
           ]
+        }
+      ]
+    },
+    {
+      "label": "ESLint",
+      "children": [
+        {
+          "label": "ESLint Plugin Router",
+          "to": "eslint/eslint-plugin-router"
+        },
+        {
+          "label": "Create Route Property Order",
+          "to": "eslint/create-route-property-order"
         }
       ]
     },
@@ -316,6 +345,14 @@
             {
               "label": "With tRPC + React Query",
               "to": "framework/react/examples/with-trpc-react-query"
+            },
+            {
+              "label": "Monorepo basic",
+              "to": "framework/react/examples/router-monorepo-simple"
+            },
+            {
+              "label": "Monorepo with React Query",
+              "to": "framework/react/examples/router-monorepo-react-query"
             }
           ]
         }
@@ -343,6 +380,10 @@
             {
               "label": "Basic + DIY Auth",
               "to": "framework/react/examples/start-basic-auth"
+            },
+            {
+              "label": "Basic + Supabase Auth",
+              "to": "framework/react/examples/start-supabase-basic"
             },
             {
               "label": "Trellaux + Convex",

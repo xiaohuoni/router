@@ -13,7 +13,8 @@ Preloading in TanStack Router is a way to load a route before the user actually 
   - Preloading by **"viewport**" works by using the Intersection Observer API to preload the dependencies for the destination route when the `<Link>` component is in the viewport.
   - This strategy is useful for preloading routes that are below the fold or off-screen.
 - Render
-  - **Coming soon!**
+  - Preloading by **"render"** works by preloading the dependencies for the destination route as soon as the `<Link>` component is rendered in the DOM.
+  - This strategy is useful for preloading routes that are always needed.
 
 ## How long does preloaded data stay in memory?
 
@@ -22,7 +23,7 @@ Preloaded route matches are temporarily cached in memory with a few important ca
 - **Unused preloaded data is removed after 30 seconds by default.** This can be configured by setting the `defaultPreloadMaxAge` option on your router.
 - **Obviously, when a a route is loaded, its preloaded version is promoted to the router's normal pending matches state.**
 
-If you need more control over preloading, caching and/or garbage collection of preloaded data, you should use an external caching library like [TanStack Query](https://react-query.tanstack.com)
+If you need more control over preloading, caching and/or garbage collection of preloaded data, you should use an external caching library like [TanStack Query](https://tanstack.com/query).
 
 The simplest way to preload routes for your application is to set the `defaultPreload` option to `intent` for your entire router:
 

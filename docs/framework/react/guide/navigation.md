@@ -88,6 +88,7 @@ export type LinkOptions<
     exact?: boolean
     includeHash?: boolean
     includeSearch?: boolean
+    explicitUndefined?: boolean
   }
   // If set, will preload the linked route on hover and cache it for this many milliseconds in hopes that the user will eventually navigate there.
   preload?: false | 'intent'
@@ -206,6 +207,7 @@ It's also common to want to update a single search param without supplying any o
 ```tsx
 const link = (
   <Link
+    to="."
     search={(prev) => ({
       ...prev,
       page: prev.page + 1,
@@ -215,8 +217,6 @@ const link = (
   </Link>
 )
 ```
-
-> 🧠 Did you notice that how we didn't even need to supply a `to` prop? By default, all navigations are relative to the current route, so if you don't supply a `to` prop, it will just update the current route's search params.
 
 ### Search Param Type Safety
 
@@ -283,6 +283,10 @@ export interface ActiveOptions {
   // If true, the link will only be active if the current URL search params inclusively match the `search` prop
   // Defaults to `true`
   includeSearch?: boolean
+  // This modifies the `includeSearch` behavior.
+  // If true,  properties in `search` that are explicitly `undefined` must NOT be present in the current URL search params for the link to be active.
+  // defaults to `false`
+  explicitUndefined?: boolean
 }
 ```
 

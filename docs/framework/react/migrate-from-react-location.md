@@ -24,13 +24,13 @@ In this guide we'll go over the process of migrating the [React Location Basic e
 
 First, we need to install the dependencies for TanStack Router.
 
-```bash
+```sh
 npm install @tanstack/react-router @tanstack/router-devtools
 ```
 
 And remove the React Location dependencies.
 
-```bash
+```sh
 npm uninstall @tanstack/react-location @tanstack/react-location-devtools
 ```
 
@@ -40,7 +40,7 @@ If your project uses Vite (or one the supported bundlers), you can use the TanSt
 
 Installation of the Vite plugin:
 
-```bash
+```sh
 npm install -D @tanstack/router-plugin
 ```
 
@@ -57,7 +57,7 @@ export default defineConfig({
 })
 ```
 
-However, if your application does not use Vite, you use one of our other [supported bundlers](./guide/file-based-routing.md#prerequisites), or you can use the `@tanstack/router-cli` package to watch for changes in your routes files and automatically update the routes configuration.
+However, if your application does not use Vite, you use one of our other [supported bundlers](./guide/file-based-routing.md#installation), or you can use the `@tanstack/router-cli` package to watch for changes in your routes files and automatically update the routes configuration.
 
 ### Step 3: Add the file-based configuration file to your project
 
@@ -76,7 +76,7 @@ You can find the full list of options for the `tsr.config.json` file [here](./gu
 
 Create a `routes` directory in the `src` directory of your project.
 
-```bash
+```sh
 mkdir src/routes
 ```
 
@@ -201,7 +201,7 @@ If you are using one of the supported bundlers, the route tree will be generated
 
 If you are not using one of the supported bundlers, you can generate the route tree by running the following command:
 
-```bash
+```sh
 npx tsr generate
 ```
 

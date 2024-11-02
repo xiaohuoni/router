@@ -1,8 +1,26 @@
 import path from 'node:path'
 import { existsSync, readFileSync } from 'node:fs'
 import { z } from 'zod'
+import { virtualRootRouteSchema } from './filesystem/virtual/config'
+
+const defaultTemplate = {
+  routeTemplate: [
+    'import * as React from "react";\n',
+    '%%tsrImports%%',
+    '\n\n',
+    '%%tsrExportStart%%{\n component: RouteComponent\n }%%tsrExportEnd%%\n\n',
+    'function RouteComponent() { return "Hello %%tsrPath%%!" };\n',
+  ].join(''),
+  apiTemplate: [
+    'import { json } from "@tanstack/start";\n',
+    '%%tsrImports%%',
+    '\n\n',
+    '%%tsrExportStart%%{ GET: ({ request, params }) => { return json({ message:\'Hello "%%tsrPath%%"!\' }) }}%%tsrExportEnd%%\n',
+  ].join(''),
+}
 
 export const configSchema = z.object({
+  virtualRouteConfig: virtualRootRouteSchema.optional(),
   routeFilePrefix: z.string().optional(),
   routeFileIgnorePrefix: z.string().optional().default('-'),
   routeFileIgnorePattern: z.string().optional(),
@@ -19,18 +37,24 @@ export const configSchema = z.object({
     .array(z.string())
     .optional()
     .default([
-      '/* prettier-ignore-start */',
       '/* eslint-disable */',
       '// @ts-nocheck',
       '// noinspection JSUnusedGlobalSymbols',
     ]),
-  routeTreeFileFooter: z
-    .array(z.string())
-    .optional()
-    .default(['/* prettier-ignore-end */']),
+  routeTreeFileFooter: z.array(z.string()).optional().default([]),
   autoCodeSplitting: z.boolean().optional(),
   indexToken: z.string().optional().default('index'),
   routeToken: z.string().optional().default('route'),
+  customScaffolding: z
+    .object({
+      routeTemplate: z
+        .string()
+        .optional()
+        .default(defaultTemplate.routeTemplate),
+      apiTemplate: z.string().optional().default(defaultTemplate.apiTemplate),
+    })
+    .optional()
+    .default(defaultTemplate),
   experimental: z
     .object({
       // TODO: Remove this option in the next major release (v2).
@@ -117,5 +141,15 @@ ERROR: The "experimental.enableCodeSplitting" flag has been made stable and is n
       `The "indexToken" and "routeToken" options must be different.`,
     )
   }
+
+  if (
+    config.routeFileIgnorePrefix &&
+    config.routeFileIgnorePrefix.trim() === '_'
+  ) {
+    throw new Error(
+      `The "routeFileIgnorePrefix" cannot be an underscore ("_"). This is a reserved character used to denote a pathless route. Please use a different prefix.`,
+    )
+  }
+
   return config
 }

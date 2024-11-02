@@ -9,7 +9,6 @@ import { Body, Head, Html, Meta, Scripts } from '@tanstack/start'
 import * as React from 'react'
 import { DefaultCatchBoundary } from '~/components/DefaultCatchBoundary'
 import { NotFound } from '~/components/NotFound'
-// @ts-expect-error
 import appCss from '~/styles/app.css?url'
 import { seo } from '~/utils/seo'
 
@@ -87,7 +86,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             Home
           </Link>{' '}
           <Link
-            to={'/posts'}
+            to="/posts"
             activeProps={{
               className: 'font-bold',
             }}
@@ -95,7 +94,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             Posts
           </Link>{' '}
           <Link
-            to={'/users'}
+            to="/users"
             activeProps={{
               className: 'font-bold',
             }}

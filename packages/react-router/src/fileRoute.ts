@@ -14,6 +14,7 @@ import type {
   AnySearchValidator,
   FileBaseRouteOptions,
   ResolveParams,
+  RootRoute,
   Route,
   RouteConstraints,
   RouteLoaderFn,
@@ -28,6 +29,29 @@ export interface FileRoutesByPath {
   //   parentRoute: typeof rootRoute
   // }
 }
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: any
+  fullPaths: any
+  to: any
+  fileRoutesByTo: any
+  id: any
+  fileRoutesById: any
+}
+
+export type InferFileRouteTypes<TRouteTree extends AnyRoute> =
+  TRouteTree extends RootRoute<
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    infer TFileRouteTypes extends FileRouteTypes
+  >
+    ? TFileRouteTypes
+    : never
 
 export function createFileRoute<
   TFilePath extends keyof FileRoutesByPath,
@@ -76,6 +100,7 @@ export class FileRoute<
   >(
     options?: FileBaseRouteOptions<
       TParentRoute,
+      TId,
       TPath,
       TSearchValidator,
       TParams,
@@ -137,6 +162,7 @@ export function FileRouteLoader<
     TLoaderFn,
     RouteLoaderFn<
       TRoute['parentRoute'],
+      TRoute['types']['id'],
       TRoute['types']['params'],
       TRoute['types']['loaderDeps'],
       TRoute['types']['routerContext'],
@@ -241,16 +267,9 @@ export function createLazyRoute<
   }
 }
 
-const routeGroupPatternRegex = /\(.+\)/g
-
-function removeGroups(s: string) {
-  return s.replaceAll(routeGroupPatternRegex, '').replaceAll('//', '/')
-}
-
 export function createLazyFileRoute<
   TFilePath extends keyof FileRoutesByPath,
   TRoute extends FileRoutesByPath[TFilePath]['preLoaderRoute'],
 >(id: TFilePath) {
-  return (opts: LazyRouteOptions) =>
-    new LazyRoute<TRoute>({ id: removeGroups(id), ...opts })
+  return (opts: LazyRouteOptions) => new LazyRoute<TRoute>({ id, ...opts })
 }
